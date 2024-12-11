@@ -1,66 +1,54 @@
-## Foundry
+# Bagel Token and Merkle Airdrop Contracts
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+---
 
-Foundry consists of:
+## Overview
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+This repository contains two Solidity contracts:
+1. **Bagel Token** (`BagelToken.sol`) - A simple ERC20 token implementation with minting functionality restricted to the contract owner.
+2. **Merkle Airdrop** (`MerkleAirdrop.sol`) - A contract enabling secure, verifiable token distribution using Merkle proofs and EIP-712 signature validation.
 
-## Documentation
+---
 
-https://book.getfoundry.sh/
+## Contracts
 
-## Usage
+### Bagel Token (`BagelToken.sol`)
 
-### Build
+A basic ERC20 token implementation with the following features:
+- **Name**: Bagel Token
+- **Symbol**: BT
+- **Owner-Controlled Minting**: The contract owner can mint new tokens using the `mint` function.
 
-```shell
-$ forge build
-```
+#### Key Functions
+- `constructor()` - Initializes the ERC20 token.
+- `mint(address to, uint256 amount)` - Allows the owner to mint tokens to a specific address.
 
-### Test
+---
 
-```shell
-$ forge test
-```
+### Merkle Airdrop (`MerkleAirdrop.sol`)
 
-### Format
+This contract facilitates airdropping tokens securely to eligible users by:
+- Verifying eligibility using a Merkle proof.
+- Ensuring each user can only claim their tokens once.
+- Using EIP-712 for additional off-chain signature validation.
 
-```shell
-$ forge fmt
-```
+#### Key Features
+- Merkle proof-based eligibility verification.
+- Prevention of double claims.
+- Secure transfer of tokens to eligible claimants.
 
-### Gas Snapshots
+#### Key Functions
+- `claim(address account, uint256 amount, bytes32[] calldata merkleProof, uint8 v, bytes32 r, bytes32 s)`:
+  - Verifies the Merkle proof and EIP-712 signature.
+  - Transfers the claimed amount to the user if valid.
+- `getMessage(address account, uint256 amount)`:
+  - Returns the hashed message used for EIP-712 signature verification.
+- `getMerkleRoot()`:
+  - Returns the Merkle root used for eligibility checks.
+- `getAirdropToken()`:
+  - Returns the token used for the airdrop.
 
-```shell
-$ forge snapshot
-```
+## Notes
 
-### Anvil
+- This repository is part of the **[Cyfrin Updraft Advanced Foundry Course](https://updraft.cyfrin.io/courses/advanced-foundry)**.
 
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
